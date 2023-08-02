@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "ROOT",
+			"path": "../"
+		},
+		{
+			"name": "services/m1service",
+			"path": "../services/m1service"
+		},
+		{
+			"name": "services/m2service",
+			"path": "../services/m2service"
+		},
+		{
+			"name": "libraries/logger",
+			"path": "../libraries/logger"
+		}
+	],
+  "settings": {}
+}

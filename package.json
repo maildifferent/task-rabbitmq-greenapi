@@ -1,0 +1,21 @@
+{
+  "name": "greenapitask-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "workspaces": [
+    "libraries/*",
+    "services/*"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "typescript": "^5.1.6"
+  }
+}
