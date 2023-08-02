@@ -1,3 +1,4 @@
+import { logger } from '@greenapitask/logger'
 import amqplib from 'amqplib'
 import { CONFIG } from './config.js'
 
@@ -8,16 +9,31 @@ export async function startRpcM2Service(): Promise<void> {
   const queue = queueAssert.queue
 
   channel.consume(queue, function reply(msg) {
-    if (msg === null) return
-    const obj: unknown = JSON.parse(msg.content.toString())
-    if (!isObjWithProperties(obj, ['target', 'id'])) return
-    const target = obj.target
-    const id = obj.id
-    if (typeof target !== 'string' || typeof id !== 'number') return
-    channel.sendToQueue(msg.properties.replyTo,
-      Buffer.from(JSON.stringify({ id, text: 'You received order with id: ' + id })), {
-      correlationId: msg.properties.correlationId
-    })
+    try {
+      logger.info(`Message received: ${msg?.content.toString()}`)
+      if (msg === null) return
+      const obj: unknown = JSON.parse(msg.content.toString())
+      if (!isObjWithProperties(obj, ['target', 'id'])) {
+        logger.warning('Incorrect message received: ' + JSON.stringify(obj))
+        return
+      }
+      const target = obj.target
+      const id = obj.id
+      if (target !== 'order') {
+        logger.warning('We can\'t process: ' + target)
+        return
+      }
+      if (typeof id !== 'number') {
+        logger.warning('Id should be a number: ' + id)
+        return
+      }
+      channel.sendToQueue(msg.properties.replyTo,
+        Buffer.from(JSON.stringify({ id, text: 'You received order with id: ' + id })), {
+        correlationId: msg.properties.correlationId
+      })
+    } catch (error: any) {
+      logger.error(error.message, error)
+    }
   }, { noAck: true }
   )
 }

@@ -8,9 +8,13 @@ export function defineRoutes(expressApp: express.Application) {
   router.get('/:id', async (req, res, next) => {
     try {
       logger.info(`Order API was called to get order by id ${req.params.id}`)
-      const response = await orderRepository.findById(
-        parseInt(req.params.id, 10)
-      )
+      const id = parseInt(req.params.id, 10)
+      if (!Number.isInteger(id) || id < 1 || id > Number.MAX_SAFE_INTEGER) {
+        logger.info('Id should be positive safe integer: ' + id)
+        res.status(404).end()
+        return
+      }
+      const response = await orderRepository.findById(id)
 
       if (!response) {
         res.status(404).end()

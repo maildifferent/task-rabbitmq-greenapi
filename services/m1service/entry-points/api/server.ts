@@ -17,6 +17,7 @@ export async function startWebServer(): Promise<AddressInfo> {
   expressApp.use(express.urlencoded({ extended: true }))
   expressApp.use(express.json())
   defineRoutes(expressApp)
+  defineErrorHandlingMiddleware(expressApp)
   const APIAddress = await openConnection(expressApp)
   return APIAddress
 }
@@ -32,4 +33,18 @@ async function openConnection(
       resolve(connection.address() as AddressInfo)
     })
   })
+}
+
+function defineErrorHandlingMiddleware(expressApp: express.Application) {
+  expressApp.use(
+    async (
+      error: any,
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      logger.error(error.message, error)
+      res.status(error?.HTTPStatus || 500).end()
+    }
+  )
 }

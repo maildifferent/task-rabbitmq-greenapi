@@ -10,5 +10,5 @@ start()
     logger.info(`The app has started successfully ${startResponses}}`)
   })
   .catch((error) => {
-
+    logger.error(error.message, error)
   })

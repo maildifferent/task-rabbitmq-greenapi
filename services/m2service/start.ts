@@ -2,7 +2,7 @@ import { logger } from '@greenapitask/logger'
 import { startRpcM2Service } from './entry-points/api/server.js'
 
 async function start() {
-  await startRpcM2Service()
+  return Promise.all([startRpcM2Service()])
 }
 
 start()
@@ -10,5 +10,5 @@ start()
     logger.info(`The app has started successfully ${startResponses}}`)
   })
   .catch((error) => {
-
+    logger.error(error.message, error)
   })

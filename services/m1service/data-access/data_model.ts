@@ -10,7 +10,8 @@ export abstract class DataModel<OutRecord> {
 
   async findById(id: number): Promise<OutRecord> {
     const obj: unknown = await this.dataSource.findById(this.target, id)
-    if (!this.typeguard(obj)) throw new Error()
+    if (!this.typeguard(obj))
+      throw new Error('Incorrect obj returned from source: ' + JSON.stringify(obj))
     return obj
   }
 }
