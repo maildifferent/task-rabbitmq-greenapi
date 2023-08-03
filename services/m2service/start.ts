@@ -2,6 +2,12 @@ import { logger } from '@greenapitask/logger'
 import { startRpcM2Service } from './entry-points/api/server.js'
 
 async function start() {
+  logger.configureLogger(
+    {
+      prettyPrint: true,
+    },
+    true
+  )
   return Promise.all([startRpcM2Service()])
 }
 
